@@ -1,21 +1,21 @@
 /**
  * @type {any}
  */
-const WebSocket = require('ws');
-const http = require('http');
-const StaticServer = require('node-static').Server;
-const setupWSConnection = require('y-websocket/bin/utils.js').setupWSConnection;
-const setPersistence = require('y-websocket/bin/utils.js').setPersistence;
-const persistence = require('./dynamodb').persistence;
+import http from 'http';
+import { Server as StaticServer } from 'node-static';
+import WebSocketServer from 'ws/lib/websocket-server';
+import utils from 'y-websocket/bin/utils';
+import { persistence } from './store';
 
-setPersistence(persistence);
+const { setPersistence, setupWSConnection } = utils;
+
+setPersistence(persistence as any);
 
 const production = process.env.PRODUCTION != null;
 const port = process.env.PORT || 8080;
 
-const staticServer = new StaticServer('../', {
+const staticServer = new StaticServer('../public', {
   cache: production ? 3600 : false,
-  gzip: production,
 });
 
 const server = http.createServer((request, response) => {
@@ -25,9 +25,9 @@ const server = http.createServer((request, response) => {
     })
     .resume();
 });
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocketServer({ server });
 
-wss.on('connection', (conn, req) =>
+wss.on('connection', (conn: any, req: any) =>
   setupWSConnection(conn, req, {
     gc: req.url.slice(1) !== 'prosemirror-versions',
   })
