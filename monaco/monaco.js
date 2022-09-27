@@ -39,7 +39,9 @@ window.addEventListener('load', () => {
     /** @type {HTMLElement} */ (document.getElementById('monaco-editor')),
     {
       value: menus,
-      minimap: false,
+      minimap: {
+        enabled: false,
+      },
       language: 'json',
       theme: 'vs-dark',
     }
