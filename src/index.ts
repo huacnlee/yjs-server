@@ -4,6 +4,7 @@
 import http from 'http';
 import { Server as StaticServer } from 'node-static';
 import WebSocketServer from 'ws/lib/websocket-server';
+// https://github.com/yjs/y-websocket/blob/master/bin/utils.js
 import utils from 'y-websocket/bin/utils';
 import { persistence } from './store';
 
@@ -29,7 +30,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (conn: any, req: any) =>
   setupWSConnection(conn, req, {
-    gc: req.url.slice(1) !== 'prosemirror-versions',
+    gc: true,
   })
 );
 
